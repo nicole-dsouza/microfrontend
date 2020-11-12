@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
+// to do // should change to StaticRouter but it causes issues
 
 // import './App.css';
 import routes from './routes'
