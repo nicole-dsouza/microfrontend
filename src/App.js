@@ -23,6 +23,8 @@ function App(passedData) {
             ))}
           </Switch>
         </BrowserRouter>
+        <hr/>
+        <a href="/research">Return to Magnitt Research</a>
         {/* <img src={`${process.env.REACT_APP_CONTENT_HOST}${logo}`} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload. 1
