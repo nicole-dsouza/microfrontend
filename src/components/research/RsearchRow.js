@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash'
 import React, {Component} from 'react'
 
 export default class ResearchRow extends Component {
@@ -11,17 +12,17 @@ export default class ResearchRow extends Component {
 
         let link2
         link2 = researchProps.type_id == 1 && researchProps.is_user_purchased == 0 ?
-            <a href={`testing/research/${researchProps.code}-${researchProps.id}`} >
+            <a href={`/researchtest/${researchProps.code}-${researchProps.id}`} >
                 <h2 style={{ textAlign: researchProps.lang === 'ar' ? 'right' : 'left' }}><i className="fa fa-lock"></i> {researchProps.name} </h2>
             </a> :
             researchProps.is_user_purchased == 1 ?
-                <a href={`testing/research/${researchProps.code}-${researchProps.id}`} >
+                <a href={`/researchtest/${researchProps.code}-${researchProps.id}`} >
                     <h2 style={{ textAlign: researchProps.lang === 'ar' ? 'right' : 'left' }} ><i className="fa fa-unlock"></i> {researchProps.name} </h2>
                 </a> :
-                <a href={`testing/research/${researchProps.code}-${researchProps.id}`}><h2 style={{ textAlign: researchProps.lang === 'ar' ? 'right' : 'left' }} >{researchProps.name}</h2></a>
+                <a href={`/researchtest/${researchProps.code}-${researchProps.id}`}><h2 style={{ textAlign: researchProps.lang === 'ar' ? 'right' : 'left' }} >{researchProps.name}</h2></a>
 
         let sample;
-        if ((researchProps.sample_data)) {
+        if (!isEmpty(researchProps.sample_data)) {
             sample =
                 <a href={researchProps.sample_data.path} className="btn btn-secondary btn-sm btn-block mt-2 mb-2" target="_blank" rel='noopener noreferrer' download>View Sample</a>
         }
@@ -50,7 +51,7 @@ export default class ResearchRow extends Component {
                 <div className="newsSingle row" style={{ flexDirection: `${researchProps.lang === 'ar' ? 'row-reverse' : 'row'}`}}>
                     <div className="col-md-3">
                         <div style={{ backgroundImage: image, width: '100%', height: '100%', backgroundSize: 'cover' }}>
-                            <a href={`testing/research/${researchProps.code}-${researchProps.id} `}></a>
+                            <a href={`/researchtest/${researchProps.code}-${researchProps.id} `}></a>
                         </div>
                     </div>
                     <div className="col-md-9">
@@ -60,7 +61,7 @@ export default class ResearchRow extends Component {
                                 <span style={{ fontSize: 14, width: "100%" }}>{subText}</span>
                             </div>
                             <div className="col-md-12 col-lg-3">
-                                <a href={`/research/${researchProps.code}-${researchProps.id}`} className="btn btn-main btn-sm btn-block">View Report</a>
+                                <a href={`/researchtest/${researchProps.code}-${researchProps.id}`} className="btn btn-main btn-sm btn-block">View Report</a>
                                 {sample}
                             </div>
                         </div>

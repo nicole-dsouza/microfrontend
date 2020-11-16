@@ -1,4 +1,5 @@
-import Axios from 'axios'
+import axios from 'axios'
+import { isEmpty } from 'lodash'
 import React, { Component } from 'react'
 import { REPORT_TYPES } from '../lib/constants'
 import { API_URL_NEW, SITE_IMAGE_URL } from '../lib/endpoints'
@@ -15,7 +16,7 @@ export default class Research extends Component {
         this.passedData = this.props.passedData.data
         let researchId = this.props.match.params.slug.split('-').pop()
         let fields = this.passedData.prepareSelectParam(['id', 'code', 'name', 'full_description', 'short_description', 'price', 'image_data', 'sample_data', 'type_id', 'category_id', 'category_data', 'body', 'published_at', 'is_user_purchased', 'download_policy', 'lang'])
-        Axios.get(`${API_URL_NEW}/research/${researchId}?fields=${fields}`).then(
+        axios.get(`${API_URL_NEW}/research/${researchId}?fields=${fields}`).then(
             response => {
                 this.setState({
                     data: response.data.data
@@ -24,8 +25,42 @@ export default class Research extends Component {
         )
     }
 
+    handleDownload = () => {
+        if (!this.props.passedData.user.is_loggedin) {
+            this.setState({ showPopup: true })
+        } else {
+            this.setState({ isDownloading: true });
+            axios.post(`${API_URL_NEW}/research/${this.state.data.id}/download`,
+                {
+                    user_id: this.props.passedData.user.user_id
+                },
+                {
+                    headers: { Authorization: `${this.props.passedData.user.token}` }
+                })
+                .then(response => {
+                    if (response.data.status === 201) {
+                        // this.close()
+                        this.setState({ isemail: true,  isDownloading: false })
+                        
+                        const reportData = response.data.data.report_path_data;
+                        if (!isEmpty(reportData) && reportData.path) {
+                            const fileURL       = reportData.path;
+                            window.open(fileURL);
+                        }
+                    }
+                    else {
+                        // toast.error(ERROR_MESSAGES.ACCESS_DENIED_FILE)
+                        this.setState({ isDownloading: false });
+                    }
+                }).catch(error => {
+                    // toast.error(ERROR_MESSAGES.ACCESS_DENIED_FILE);
+                    this.setState({ isDownloading: false });
+                });
+        }
+    }
+
     renderHeader() {
-        // const { user }  = this.props;
+        const { user }  = this.props.passedData;
         const { data }  = this.state;
         let isAccess    = false;
         let content     = null;
@@ -41,20 +76,18 @@ export default class Research extends Component {
         //     // locations = this.state.locations.map((loc, i) => <OptionRows key={i} data={loc} />);
         // }
 
-        if (true && (data.is_user_purchased == 1 || (data.download_policy && data.download_policy.is_allowed))) {
-            // if (user && user.is_loggedin && (data.is_user_purchased == 1 || (data.download_policy && data.download_policy.is_allowed))) {
+        if (user && user.is_loggedin && (data.is_user_purchased == 1 || (data.download_policy && data.download_policy.is_allowed))) {
             isAccess = true;
         }
 
         if ((this.state.data.type_id == REPORT_TYPES.free || this.state.data.type_id == REPORT_TYPES.sponsored)) {
-            if (true) {
-                // if (user && user.is_loggedin) {
+            if (user && user.is_loggedin) {
                 content = (
                     <div className="lock" style={{ padding: 0, marginBottom: 0 }}>
                         <h3>Download the {this.state.data.name}</h3>
                         <div className="buttons" >
                             <p style={{ maxWidth: '100%' }}>
-                                <a onClick={this.handleFreeDownload} className="learn redColBtn" style={{ width: '100%' }} target="_blank" rel="noopener noreferrer" >
+                                <a onClick={this.handleDownload} className="learn redColBtn" style={{ width: '100%' }} target="_blank" rel="noopener noreferrer" >
                                     {this.state.isDownloading && <i className="fas fa-circle-notch fa-spin" style={{ marginRight: 3 }}></i>}
                                     Download Here
                                 </a>
@@ -117,8 +150,7 @@ export default class Research extends Component {
                 );
             }
         } else if (this.state.data.type_id == REPORT_TYPES.paid) {
-            if (this.state.data.price == 0 && !(true)){
-                // if (this.state.data.price == 0 && !(this.props.user.roles.includes(9) || this.props.user.roles.includes(20))){
+            if (this.state.data.price == 0 && !(this.props.passedData.user.roles.includes(9) || this.props.passedData.user.roles.includes(20))){
                 content = '';
             }
             else if (isAccess) {
@@ -161,8 +193,7 @@ export default class Research extends Component {
     }
 
     renderBody(){
-        // const { is_loggedin }    = this.props.user;
-        const  is_loggedin     = true;
+        const { user }    = this.props.passedData;
         const { data }                  = this.state;
         const body      = data.body;
         let isAccess    = false;
@@ -174,8 +205,7 @@ export default class Research extends Component {
             details   = body.split('/sites/default/files').join(SITE_IMAGE_URL)
         }
 
-        // if (is_loggedin && (data.is_user_purchased == 1 || roles.indexOf(9) > -1)) {
-        if (is_loggedin && (data.is_user_purchased == 1 || (data.download_policy && data.download_policy.is_allowed))) {
+        if (user.is_loggedin && (data.is_user_purchased == 1 || (data.download_policy && data.download_policy.is_allowed))) {
             isAccess = true;
         }
 
@@ -194,8 +224,7 @@ export default class Research extends Component {
             }
 
         } else if (data.type_id == REPORT_TYPES.paid) {
-            if (this.state.data.price == 0 && !(true)){
-                // if (this.state.data.price == 0 && !(this.props.user.roles.includes(9) || this.props.user.roles.includes(20))){
+            if (this.state.data.price == 0 && !(this.props.passedData.user.roles.includes(9) || this.props.passedData.user.roles.includes(20))){
                 content = (
                     <div>
                         <p style={{ textAlign: data.lang === 'ar' ? 'right' : 'left', paddingBottom: '10px', paddingTop: '10px', maxWidth: '100%' }}>
@@ -239,8 +268,7 @@ export default class Research extends Component {
     }
 
     renderFooter(){
-        // const { is_loggedin }    = this.props.user;
-        const is_loggedin = true;
+        const { user }    = this.props.passedData;
         const {data}                    = this.state;
         let isAccess = false;
         let content = null;
@@ -256,21 +284,20 @@ export default class Research extends Component {
         //     // locations = this.state.locations.map((loc, i) => <OptionRows key={i} data={loc} />);
         // }
 
-        // if (is_loggedin && (this.state.data.is_user_purchased == 1 || roles.indexOf(9) > -1)) {
-        if (is_loggedin && (data.is_user_purchased == 1 || (data.download_policy && data.download_policy.is_allowed))) {
+        if (user.is_loggedin && (data.is_user_purchased == 1 || (data.download_policy && data.download_policy.is_allowed))) {
             isAccess = true;
         }
 
         // Free reports
         if ((this.state.data.type_id == REPORT_TYPES.free || this.state.data.type_id == REPORT_TYPES.sponsored)) {
-            if (is_loggedin) {
+            if (user.is_loggedin) {
                 content = (
                     <div>
                         <div className="lock" style={{ padding: '0', marginBottom: 0, paddingBottom: "20" }}>
                             <h3>Download the {this.state.data.name}</h3>
                             <div className="buttons" >
                                 <p style={{ maxWidth: '100%' }}>
-                                    <a onClick={this.handleFreeDownload} className="learn redColBtn" target="_blank" rel="noopener noreferrer" >
+                                    <a onClick={this.handleDownload} className="learn redColBtn" target="_blank" rel="noopener noreferrer" >
                                         {this.state.isDownloading && <i className="fas fa-circle-notch fa-spin" style={{ marginRight: 3 }}></i>}
                                         Download Here
                                     </a>
@@ -339,8 +366,7 @@ export default class Research extends Component {
             }
 
         } else if (this.state.data.type_id == REPORT_TYPES.paid) {
-            if (this.state.data.price == 0 && !(true)){
-                // if (this.state.data.price == 0 && !(this.props.user.roles.includes(9) || this.props.user.roles.includes(20))){
+            if (this.state.data.price == 0 && !(this.props.passedData.user.roles.includes(9) || this.props.passedData.user.roles.includes(20))){
                 content = '';
             }
             else if (isAccess) {
@@ -389,8 +415,40 @@ export default class Research extends Component {
             filePath = encodeURI(this.state.data.image_data.path)
         }
 
+        let bg
+        let popup
+        if (this.state.showPopup) {
+            document.body.style.overflow = 'hidden'
+            popup = <div className="forgot popup">
+                <a className="close" onClick={event => this.close(event)}>
+                    <img src="/images/close.png" alt="" />
+                </a>
+                <div className="title">
+                    <h3>Enter Email</h3>
+                </div>
+                <div className="content" >
+
+                    <input type="text" className={this.state.emailerror ? 'email error' : 'email'}
+                        placeholder="Email"
+                        value={this.state.email}
+                        onChange={e => { this.setState({ email: e.target.value, emailerror: false }) }}
+                        onKeyPress={this.handleKeyPress}
+                    />
+                    {this.state.emailerror ? <p className="red">Email cannot be empty</p> : ''}
+                    <a className="buyProButton" onClick={this.sendEmail}>SEND</a>
+                    <div className="clear"></div>
+
+                </div>
+                <p>
+                    Enter your email address and the file will be downloaded to your device!
+                </p>
+
+            </div>
+            bg = <div className="filterBackground" onClick={event => this.close(event)}></div>
+        }
+
         return (
-            <div>
+            <div style={{ backgroundColor: '#fff', width: "70%", margin: 10, padding: 10}}>
                 <div className="singleResearchHeader row" style={{ margin: 0, marginTop: '20px', borderBottom: '1px solid #eeeeee', flexDirection: this.state.data.lang === 'ar' ? 'row-reverse': 'row' }} >
                     <div className="col-md-7">
                         <img style={{ marginBottom: 20, marginTop: 0 }} src={filePath} alt={this.state.data.title} className="mainSingleImage maxHeight" title={this.state.data.name} />
@@ -408,6 +466,7 @@ export default class Research extends Component {
                     {this.renderBody()?this.renderFooter():null}
 
                 </div>
+                {popup}
             </div>
         )
     }
