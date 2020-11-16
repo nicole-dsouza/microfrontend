@@ -1,5 +1,7 @@
 import NewsTest from "./pages/newsTest"
 import NewsSingle from "./pages/newsSingle.js"
+import ResearchDirectory from "./pages/ResearchDirectory";
+import Research from "./pages/Research";
 
 const routes = [
     {
@@ -11,6 +13,16 @@ const routes = [
         path: '/testing/newstest/:id',
         exact: true,
         component: NewsSingle,
+    },
+    {
+        path: '/researchtest',
+        exact: true,
+        component: ResearchDirectory,
+    },
+    {
+        path: '/researchtest/:slug',
+        exact: true,
+        component: Research,
     },
 ]
 

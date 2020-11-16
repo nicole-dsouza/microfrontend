@@ -8,7 +8,7 @@ function App(passedData) {
 
   return (
     <div className="App">
-      <header className="App-header" style={{ paddingLeft: 45, background: "inherit" }}>
+      <div className="App-header" style={{ padding: '0 15px', background: "inherit" }}>
         <BrowserRouter>
           <Switch>
             {routes.map(({ path, exact, component: Component, ...props }) => (
@@ -37,7 +37,7 @@ function App(passedData) {
         >
           Learn React
         </a> */}
-      </header>
+      </div>
     </div>
   );
 }
