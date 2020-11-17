@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Helmet } from 'react-helmet';
 import axios from 'axios';
+import { prepareSelectParam } from '../lib/queryParams';
+import { API_URL_NEW } from '../lib/endpoints';
 
 class News extends Component {
     constructor() {
@@ -9,9 +11,8 @@ class News extends Component {
     }
 
     componentDidMount() {
-        this.passedData = this.props.passedData.data // what we passed from the main app
-        let paramFields = this.passedData.prepareSelectParam(['id', 'title', 'body', 'image_data', 'code', 'published_at', 'created_at'])
-        let url = `${this.passedData.API_URL_NEW}/news?fields=${paramFields}&filters=is_published^:1&limit=4&page=1&sort=published_at^:desc`;
+        let paramFields = prepareSelectParam(['id', 'title', 'body', 'image_data', 'code', 'published_at', 'created_at'])
+        let url = `${API_URL_NEW}/news?fields=${paramFields}&filters=is_published^:1&limit=4&page=1&sort=published_at^:desc`;
         axios.get(url).then(response => {
             this.setState({ news: response.data.data })
         })

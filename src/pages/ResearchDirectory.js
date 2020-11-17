@@ -3,6 +3,7 @@ import axios from 'axios'
 import Select from 'react-select';
 import { API_URL_NEW } from '../lib/endpoints'
 import ResearchRow from '../components/research/RsearchRow'
+import { prepareFilterParam, prepareSelectParam } from '../lib/queryParams';
 
 export default class ResearchDirectory extends Component {
     constructor(props){
@@ -47,12 +48,11 @@ export default class ResearchDirectory extends Component {
     }
 
     getData() {
-        this.passedData = this.props.passedData.data
-        let fields = this.passedData.prepareSelectParam(['id', 'name', 'short_description', 'preview_image_data', 'image_data', 'code', 'sample_data', 'published_at', 'type_id', 'price', 'lang', 'category_data', 'sponsor_logo_id', 'sponsor_logo_data', 'created_at'])
+        let fields = prepareSelectParam(['id', 'name', 'short_description', 'preview_image_data', 'image_data', 'code', 'sample_data', 'published_at', 'type_id', 'price', 'lang', 'category_data', 'sponsor_logo_id', 'sponsor_logo_data', 'created_at'])
         let filters = ''
 
         if(this.state.category){
-            filters = this.passedData.prepareFilterParam([{key: 'category', value: [this.state.category.value], op: "^:"}])
+            filters = prepareFilterParam([{key: 'category', value: [this.state.category.value], op: "^:"}])
         }
 
         axios.get(`${API_URL_NEW}/research?fields=${fields}&filters=is_published^:1^,${filters}&limit=${this.state.limit}&page=${this.state.page}&sort=published_at^:desc`).then(

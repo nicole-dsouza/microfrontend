@@ -5,9 +5,11 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 // render micro frontend function
-window.rendercreatereactapp = (containerId, history, data, user) => {
+window.rendercreatereactapp = (containerId, history, data) => {
 
-  ReactDOM.hydrate(<App history={history} data={data} user={user}/>, document.getElementById(containerId));
+  let userData = JSON.parse(localStorage.getItem('userData'))
+
+  ReactDOM.hydrate(<App history={history} data={data} user={userData}/>, document.getElementById(containerId));
   serviceWorker.unregister();
 };
 
