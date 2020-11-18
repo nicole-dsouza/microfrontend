@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Helmet } from 'react-helmet';
 import axios from 'axios';
+import { API_URL_NEW } from '../lib/endpoints';
 
 class News extends Component {
     constructor() {
@@ -9,8 +10,7 @@ class News extends Component {
     }
 
     componentDidMount() {
-        this.passedData = this.props.passedData.data // what we passed from the main app
-        let url = `${this.passedData.API_URL_NEW}/news/${this.props.match.params.id}`;
+        let url = `${API_URL_NEW}/news/${this.props.match.params.id}`;
         axios.get(url).then(response => {
             this.setState({ title: response.data.data.title })
         })

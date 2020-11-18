@@ -3,6 +3,7 @@ import { isEmpty } from 'lodash'
 import React, { Component } from 'react'
 import { REPORT_TYPES } from '../lib/constants'
 import { API_URL_NEW, SITE_IMAGE_URL } from '../lib/endpoints'
+import { prepareSelectParam } from '../lib/queryParams'
 
 export default class Research extends Component {
     constructor(props){
@@ -15,7 +16,7 @@ export default class Research extends Component {
     componentDidMount(){
         this.passedData = this.props.passedData.data
         let researchId = this.props.match.params.slug.split('-').pop()
-        let fields = this.passedData.prepareSelectParam(['id', 'code', 'name', 'full_description', 'short_description', 'price', 'image_data', 'sample_data', 'type_id', 'category_id', 'category_data', 'body', 'published_at', 'is_user_purchased', 'download_policy', 'lang'])
+        let fields = prepareSelectParam(['id', 'code', 'name', 'full_description', 'short_description', 'price', 'image_data', 'sample_data', 'type_id', 'category_id', 'category_data', 'body', 'published_at', 'is_user_purchased', 'download_policy', 'lang'])
         axios.get(`${API_URL_NEW}/research/${researchId}?fields=${fields}`).then(
             response => {
                 this.setState({
