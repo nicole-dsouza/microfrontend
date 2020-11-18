@@ -1,11 +1,15 @@
 import axios from 'axios'
-import { isEmpty } from 'lodash'
 import React, { Component } from 'react'
+
+import { Helmet } from 'react-helmet';
+import { isEmpty } from 'lodash'
+
 import { REPORT_TYPES } from '../lib/constants'
 import { API_URL_NEW, SITE_IMAGE_URL } from '../lib/endpoints'
 import { prepareSelectParam } from '../lib/queryParams'
 
 export default class Research extends Component {
+
     constructor(props){
         super(props)
         this.state={
@@ -449,26 +453,32 @@ export default class Research extends Component {
         }
 
         return (
-            <div style={{ backgroundColor: '#fff', width: "70%", margin: 10, padding: 10}}>
-                <div className="singleResearchHeader row" style={{ margin: 0, marginTop: '20px', borderBottom: '1px solid #eeeeee', flexDirection: this.state.data.lang === 'ar' ? 'row-reverse': 'row' }} >
-                    <div className="col-md-7">
-                        <img style={{ marginBottom: 20, marginTop: 0 }} src={filePath} alt={this.state.data.title} className="mainSingleImage maxHeight" title={this.state.data.name} />
+            <>
+                <Helmet>
+                    <title>{ `${ this.state.data.name } | MAGNiTT` }</title>
+                    <meta name="description" content={this.state.data.name} />
+                </Helmet>
+                <div style={{ backgroundColor: '#fff', width: "70%", margin: 10, padding: 10}}>
+                    <div className="singleResearchHeader row" style={{ margin: 0, marginTop: '20px', borderBottom: '1px solid #eeeeee', flexDirection: this.state.data.lang === 'ar' ? 'row-reverse': 'row' }} >
+                        <div className="col-md-7">
+                            <img style={{ marginBottom: 20, marginTop: 0 }} src={filePath} alt={this.state.data.title} className="mainSingleImage maxHeight" title={this.state.data.name} />
+                        </div>
+                        <div className="col-md-5 body" >
+                            {/* {sidebutton} */}
+                            {this.renderHeader()}
+                        </div>
                     </div>
-                    <div className="col-md-5 body" >
-                        {/* {sidebutton} */}
-                        {this.renderHeader()}
+
+                    <div className="body" style={{padding:'20px'}}>
+                        {/* {reportDetails} */}
+                        {/* {reportButtons} */}
+                        {this.renderBody()}
+                        {this.renderBody()?this.renderFooter():null}
+
                     </div>
+                    {popup}
                 </div>
-
-                <div className="body" style={{padding:'20px'}}>
-                    {/* {reportDetails} */}
-                    {/* {reportButtons} */}
-                    {this.renderBody()}
-                    {this.renderBody()?this.renderFooter():null}
-
-                </div>
-                {popup}
-            </div>
+            </>
         )
     }
 }

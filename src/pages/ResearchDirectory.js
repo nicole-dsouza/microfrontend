@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import Select from 'react-select';
+
+import { Helmet } from 'react-helmet';
+
 import { API_URL_NEW } from '../lib/endpoints'
-import ResearchRow from '../components/research/RsearchRow'
 import { prepareFilterParam, prepareSelectParam } from '../lib/queryParams';
+import ResearchRow from '../components/research/RsearchRow'
 
 export default class ResearchDirectory extends Component {
     constructor(props){
@@ -109,30 +112,36 @@ export default class ResearchDirectory extends Component {
         }
 
         return (
-            <div style={{backgroundColor: 'inherit'}}>
-                <div style={{backgroundColor: '#fff', marginBottom: 10, padding: 10}}>
-                    <h1>Research Directory</h1>
-                    <div className='d-flex d-flex justify-content-between align-items-center' style={{padding: 30}}>
-                        <div style={{width: '60%'}}>
-                            <Select 
-                                placeholder="Filter by category"
-                                options={this.state.categoriesList} 
-                                value={this.state.category}
-                                onChange={(option) => this.handleFilterChange(option)}
-                            />
+            <>
+                <Helmet>
+                    <title>ResearchTest Home | MAGNiTT</title>
+                    <meta name="description" content="ResearchTest Home" />
+                </Helmet>
+                <div style={{backgroundColor: 'inherit'}}>
+                    <div style={{backgroundColor: '#fff', marginBottom: 10, padding: 10}}>
+                        <h1>Research Directory</h1>
+                        <div className='d-flex d-flex justify-content-between align-items-center' style={{padding: 30}}>
+                            <div style={{width: '60%'}}>
+                                <Select 
+                                    placeholder="Filter by category"
+                                    options={this.state.categoriesList} 
+                                    value={this.state.category}
+                                    onChange={(option) => this.handleFilterChange(option)}
+                                />
+                            </div>
+                            <a style={{backgroundColor: '#d31148', color: '#fff !important', fontSize: 16, width: 135, height: 28, borderRadius: 4, textAlign: 'center'}} onClick={this.applyFilter} > Apply </a>
+                            <a style={{backgroundColor: '#353f48', color: '#fff', fontSize: 16, width: 135, height: 28, borderRadius: 4, textAlign: 'center'}} onClick={this.clearFilter} > Clear </a>
                         </div>
-                        <a style={{backgroundColor: '#d31148', color: '#fff !important', fontSize: 16, width: 135, height: 28, borderRadius: 4, textAlign: 'center'}} onClick={this.applyFilter} > Apply </a>
-                        <a style={{backgroundColor: '#353f48', color: '#fff', fontSize: 16, width: 135, height: 28, borderRadius: 4, textAlign: 'center'}} onClick={this.clearFilter} > Clear </a>
+                    </div>
+
+                    <div style={{ width: '70%', backgroundColor: '#fff', padding: 20}}>
+                        {
+                            this.state.researchList.map((item, i) => <ResearchRow key={i} researchProps={item} />)
+                        }
+                        {showMore}
                     </div>
                 </div>
-
-                <div style={{ width: '70%', backgroundColor: '#fff', padding: 20}}>
-                    {
-                        this.state.researchList.map((item, i) => <ResearchRow key={i} researchProps={item} />)
-                    }
-                    {showMore}
-                </div>
-            </div>
+            </>
         )
     }
 }
