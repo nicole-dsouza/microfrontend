@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express from 'express';
 import fs from 'fs';
 import path from 'path';
@@ -8,6 +9,15 @@ import App from '../src/App.js';
 
 const app = express();
 const PORT = 4000;
+
+app.use(cors({
+    origin: [
+      'http://localhost:9005',
+      'http://localhost:8080',
+      'http://localhost:4000'
+    ],
+    credentials: true
+}))
 
 app.use('^/$', (req, res, next) => {
     fs.readFile(path.resolve('./build/index.html'), 'utf-8', 

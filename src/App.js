@@ -4,7 +4,6 @@ import { StaticRouter, Route, Switch } from 'react-router-dom';
 import routes from './routes'
 
 function App(passedData) {
-
   return (
     <div className="App">
       <div className="App-header" style={{ padding: '0 15px', background: "inherit" }}>
