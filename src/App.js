@@ -1,7 +1,6 @@
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
-// to do // should change to StaticRouter but it causes issues
+import React from 'react';
+import { StaticRouter, Route, Switch } from 'react-router-dom';
 
-// import './App.css';
 import routes from './routes'
 
 function App(passedData) {
@@ -9,7 +8,7 @@ function App(passedData) {
   return (
     <div className="App">
       <div className="App-header" style={{ padding: '0 15px', background: "inherit" }}>
-        <BrowserRouter>
+        <StaticRouter>
           <Switch>
             {routes.map(({ path, exact, component: Component, ...props }) => (
                 <Route
@@ -22,21 +21,9 @@ function App(passedData) {
                 />
             ))}
           </Switch>
-        </BrowserRouter>
+        </StaticRouter>
         <hr/>
         <a href="/research">Return to Magnitt Research</a>
-        {/* <img src={`${process.env.REACT_APP_CONTENT_HOST}${logo}`} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload. 1
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a> */}
       </div>
     </div>
   );

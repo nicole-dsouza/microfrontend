@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/register": "^7.12.1",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.0",
     "express": "^4.17.1",
+    "ignore-styles": "^5.0.1",
     "lodash": "^4.17.20",
     "react": "^17.0.1",
     "react-app-rewired": "^2.1.6",
@@ -19,14 +21,11 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "PORT=4000 react-app-rewired start",
-    "build": "react-app-rewired build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev:build-server": "NODE_ENV=development webpack --config webpack.server.js --mode=development -w",
-    "dev:start": "nodemon ./server-build/index.js",
-    "dev": "npm run delete && npm-run-all --parallel build dev:*",
-    "delete": "del-cli --force ./server-build"
+    "ssr": "node server/index.js"
   },
   "eslintConfig": {
     "extends": [
@@ -49,8 +48,8 @@
   "devDependencies": {
     "@babel/core": "^7.10.4",
     "@babel/plugin-proposal-class-properties": "^7.12.1",
-    "@babel/preset-env": "^7.10.4",
-    "@babel/preset-react": "^7.10.4",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/preset-react": "^7.12.5",
     "babel-loader": "^8.1.0",
     "del-cli": "^3.0.1",
     "nodemon": "^2.0.4",
